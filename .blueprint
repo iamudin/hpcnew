@@ -1,0 +1,27 @@
+created:
+    - database/factories/LabFactory.php
+    - database/factories/KalabFactory.php
+    - database/factories/MahasiswaFactory.php
+    - database/factories/PeminjamanFactory.php
+    - database/factories/JadwalKosongFactory.php
+    - database/factories/JadwalPengecualianFactory.php
+    - database/migrations/2026_04_07_232217_create_labs_table.php
+    - database/migrations/2026_04_07_232218_create_kalabs_table.php
+    - database/migrations/2026_04_07_232219_create_mahasiswas_table.php
+    - database/migrations/2026_04_07_232220_create_peminjamen_table.php
+    - database/migrations/2026_04_07_232221_create_jadwal_kosongs_table.php
+    - database/migrations/2026_04_07_232222_create_jadwal_pengecualians_table.php
+    - app/Models/Lab.php
+    - app/Models/Kalab.php
+    - app/Models/Mahasiswa.php
+    - app/Models/Peminjaman.php
+    - app/Models/JadwalKosong.php
+    - app/Models/JadwalPengecualian.php
+models:
+    User: { name: string, email: string, email_verified_at: 'timestamp nullable', password: string, remember_token: 'string:100 nullable' }
+    Lab: { nama_labor: 'string:255', deskripsi: 'text nullable', laboran_id: 'foreignId constrained on users', relationships: { hasMany: Peminjaman, hasOne: Kalab, belongsTo: User } }
+    Mahasiswa: { nim: string, nama: 'string nullable', nohp: 'string nullable', semester: 'string nullable', prodi: 'string nullable', user_id: 'foreignId nullable', relationships: { belongsTo: User, hasMany: Peminjaman } }
+    Peminjaman: { lab_id: 'foreignId constrained onDelete:cascade', mahasiswa_id: 'foreignId constrained on mahasiswas', tanggal_mulai: datetime, tanggal_selesai: datetime, keperluan: 'string:500', surat_peminjaman: 'string:255', status: 'enum:pending,confirmed_laboran,pending_kepala,approved,rejected default:pending', catatan_laboran: 'text nullable', catatan_kepala: 'text nullable', relationships: { belongsTo: 'Lab,Mahasiswa' } }
+    JadwalKosong: { lab_id: foreignId, hari: 'enum:senin,selasa,rabu,kamis,jumat,sabtu,minggu nullable', jam_mulai: 'time nullable', jam_selesai: 'time nullable', keterangan: 'string nullable', aktif: boolean, relationships: { belongsTo: Lab } }
+    JadwalPengecualian: { jadwal_kosong_id: foreignId, lab_id: foreignId, tanggal: date, jam_mulai: 'time nullable', jam_selesai: 'time nullable', tipe: 'enum:tambah,hapus', alasan: string, relationships: { belongsTo: Lab } }
+    Kalab: { nip: 'string nullable', nama: string, nohp: string, prodi: string, lab_id: string, user_id: foreignId, relationships: { belongsTo: 'User,Lab' } }
