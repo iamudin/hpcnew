@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('lab_id');
             $table->enum('hari', ["senin","selasa","rabu","kamis","jumat","sabtu","minggu"])->nullable();
+            $table->date('tanggal')->nullable();
             $table->time('jam_mulai')->nullable();
             $table->time('jam_selesai')->nullable();
             $table->string('keterangan')->nullable();

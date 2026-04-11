@@ -16,6 +16,7 @@ use Filament\Tables\Table;
 
 class LabResource extends Resource
 {
+
     protected static ?string $model = Lab::class;
     protected static ?string $modelLabel = 'Laboratorium';
 
@@ -28,7 +29,10 @@ class LabResource extends Resource
     {
         return LabForm::configure($schema);
     }
-
+public static function canAccess(): bool
+{
+    return auth()->user()->isLaboran();
+}
     public static function table(Table $table): Table
     {
         return LabsTable::configure($table);
@@ -37,7 +41,7 @@ class LabResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+           RelationManagers\JadwalKosongsRelationManager::class,
         ];
     }
 
@@ -47,6 +51,7 @@ class LabResource extends Resource
             'index' => ListLabs::route('/'),
             'create' => CreateLab::route('/create'),
             'edit' => EditLab::route('/{record}/edit'),
+            'view'   => Pages\ViewLab::route('/{record}'),
         ];
     }
 }

@@ -1,45 +1,34 @@
 <?php
 
-namespace App\Filament\Resources\Peminjamen\Tables;
+namespace App\Filament\Resources\JadwalKosongs\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class PeminjamenTable
+class JadwalKosongsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('lab.id')
+                TextColumn::make('lab.nama_labor')
                     ->searchable(),
-                TextColumn::make('mahasiswa.id')
-                    ->searchable(),
-                TextColumn::make('tanggal_mulai')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('tanggal_selesai')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('keperluan')
-                    ->searchable(),
-                TextColumn::make('surat_peminjaman')
-                    ->searchable(),
-                TextColumn::make('status')
+                TextColumn::make('hari')
                     ->badge(),
-                TextColumn::make('confirmed_laboran_at')
-                    ->dateTime()
+                TextColumn::make('jam_mulai')
+                    ->time()
                     ->sortable(),
-                TextColumn::make('approved_at')
-                    ->dateTime()
+                TextColumn::make('jam_selesai')
+                    ->time()
                     ->sortable(),
-                TextColumn::make('rejected_at')
-                    ->dateTime()
-                    ->sortable(),
+                TextColumn::make('keterangan')
+                    ->searchable(),
+                IconColumn::make('aktif')
+                    ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -53,7 +42,6 @@ class PeminjamenTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

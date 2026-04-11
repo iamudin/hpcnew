@@ -30,7 +30,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
+    function isLaboran(){
+        return $this->role=='laboran';
+    }
     /**
      * Get the user's initials
      */

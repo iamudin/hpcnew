@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nip')->nullable();
             $table->string('nama');
             $table->string('nohp');
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('lab_id')->onDelete('cascade');
             $table->foreignId('mahasiswa_id');
+            $table->foreignId('jadwal_kosong_id')->nullable();
             $table->dateTime('tanggal_mulai');
             $table->dateTime('tanggal_selesai');
             $table->string('keperluan', 500);
+            $table->string('catatan_mahasiswa', 500);
             $table->string('surat_peminjaman', 255);
             $table->enum('status', ["pending","confirmed_laboran","pending_kepala","approved","rejected"])->default('pending');
             $table->dateTime('confirmed_laboran_at')->nullable();

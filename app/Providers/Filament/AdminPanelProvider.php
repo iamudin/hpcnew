@@ -27,7 +27,11 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->spa()
-            ->path('admin')
+            ->path('/')
+            ->renderHook(
+            'panels::auth.login.form.after',   // letakkan setelah form login
+            fn () => view('auth.socialite.google')
+        )
             ->login()
             ->brandName('HPC Laboratory')
             ->brandLogo(asset('apple-touch-icon.png'))

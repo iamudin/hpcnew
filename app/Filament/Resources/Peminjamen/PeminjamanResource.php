@@ -9,6 +9,7 @@ use App\Filament\Resources\Peminjamen\Schemas\PeminjamanForm;
 use App\Filament\Resources\Peminjamen\Tables\PeminjamenTable;
 use App\Models\Peminjaman;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -17,11 +18,10 @@ use Filament\Tables\Table;
 class PeminjamanResource extends Resource
 {
     protected static ?string $model = Peminjaman::class;
-
+    protected static ?string $slug = 'peminjaman';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-    protected static ?string $modelLabel = 'Data Peminjaman';
-    protected static ?string $pluralModelLabel = 'Data Peminjaman';
-    protected static ?string $recordTitleAttribute = 'Peminjaman';
+
+    protected static ?string $recordTitleAttribute = 'peminjaman';
 
     public static function form(Schema $schema): Schema
     {
@@ -39,7 +39,7 @@ class PeminjamanResource extends Resource
             //
         ];
     }
-
+ 
     public static function getPages(): array
     {
         return [

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Peminjamen\Pages;
 
 use App\Filament\Resources\Peminjamen\PeminjamanResource;
+use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -16,4 +17,6 @@ class ListPeminjamen extends ListRecords
             CreateAction::make(),
         ];
     }
+
+         
 }
