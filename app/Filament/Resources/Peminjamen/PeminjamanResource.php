@@ -20,7 +20,7 @@ class PeminjamanResource extends Resource
     protected static ?string $model = Peminjaman::class;
     protected static ?string $slug = 'peminjaman';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
+  
     protected static ?string $recordTitleAttribute = 'peminjaman';
 
     public static function form(Schema $schema): Schema

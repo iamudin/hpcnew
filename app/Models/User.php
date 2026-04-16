@@ -33,6 +33,20 @@ class User extends Authenticatable
     function isLaboran(){
         return $this->role=='laboran';
     }
+    function isMahasiswa()
+    {
+        return $this->role == 'mahasiswa';
+    }
+    function isKalab()
+    {
+        return $this->role == 'kepala_laboran';
+    }
+    function isAdmin()
+    {
+        return $this->role == 'admin';
+    }
+
+  
     /**
      * Get the user's initials
      */
