@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->spa()
             ->path('/')
+            ->maxContentWidth('full')
             ->renderHook(
             'panels::auth.login.form.after',   // letakkan setelah form login
             fn () => view('auth.socialite.google')

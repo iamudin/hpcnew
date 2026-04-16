@@ -1,34 +1,32 @@
 <?php
 
-namespace App\Filament\Resources\JadwalKosongs\Tables;
+namespace App\Filament\Resources\Users\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
-class JadwalKosongsTable
+class UsersTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            -> modifyQueryUsing(fn(Builder $query) => $query->withoutGlobalScopes()
+            )
             ->columns([
-                TextColumn::make('lab.nama_labor')
+                TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('hari')
-                    ->badge(),
-                TextColumn::make('jam_mulai')
-                    ->time()
-                    ->sortable(),
-                TextColumn::make('jam_selesai')
-                    ->time()
-                    ->sortable(),
-                TextColumn::make('keterangan')
+                TextColumn::make('email')
+                    ->label('Email address')
                     ->searchable(),
-                IconColumn::make('aktif')
-                    ->boolean(),
+                TextColumn::make('role')
+                    ->searchable(),
+                TextColumn::make('email_verified_at')
+                    ->dateTime()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
