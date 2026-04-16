@@ -43,9 +43,9 @@ class PeminjamanResource extends Resource
     public static function getPages(): array
     {
         return [
-            // 'index' => ListPeminjamen::route('/'),
-            // 'create' => CreatePeminjaman::route('/create'),
-            // 'edit' => EditPeminjaman::route('/{record}/edit'),
+            'index' => ListPeminjamen::route('/'),
+            'create' => CreatePeminjaman::route('/create'),
+            'edit' => EditPeminjaman::route('/{record}/edit'),
         ];
     }
 }
