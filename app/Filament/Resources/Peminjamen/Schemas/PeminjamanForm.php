@@ -10,6 +10,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -18,6 +19,8 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\HtmlString;
 
 class PeminjamanForm
 {
@@ -27,19 +30,98 @@ class PeminjamanForm
             ->components([
                 Section::make('Informasi Peminjaman')
                     ->components([
+                        
+Placeholder::make('status_progress')->visible(fn (string $operation) => $operation === 'edit' || $operation === 'view')
+    ->label('Status Peminjaman')
+    ->content(function ($record) {
 
+        $status = $record->status;
+
+        $steps = [
+            'pending' => 'Menunggu Diproses',
+            'confirmed_laboran' => 'Dikonfirmasi Laboran',
+            'pending_kepala' => 'Menunggu Persetujuan Kepala',
+            $record->status=='approved' ? 'approved' : 'rejected' => $record->status === 'approved' ? 'Disetujui' : 'Ditolak',
+          
+        ];
+
+        $colors = [
+            'done' => '#16a34a',   // hijau
+            'current' => '#2563eb', // biru
+            'pending' => '#d1d5db', // abu
+            'rejected' => '#dc2626', // merah
+        ];
+
+        $statusOrder = array_keys($steps);
+        $currentIndex = array_search($status, $statusOrder);
+
+        $html = "<div style='display:flex;gap:20px;flex-wrap:wrap'>";
+
+        foreach ($steps as $key => $label) {
+
+            $index = array_search($key, $statusOrder);
+
+            if ($status === 'rejected' && $key === 'rejected') {
+                $color = $colors['rejected'];
+            } elseif ($index < $currentIndex) {
+                $color = $colors['done'];
+            } elseif ($index === $currentIndex) {
+                $color = $colors['current'];
+            } else {
+                $color = $colors['pending'];
+            }
+
+            $tanggal = match ($key) {
+                'confirmed_laboran' => $record->confirmed_laboran_at,
+                'pending'=> $record->created_at,
+                'pending_kepala'=> $record->pending_kepala_at,
+                'approved' => $record->approved_at,
+                'rejected' => $record->rejected_at,
+                default => null,
+            };
+
+            $tanggalText = $tanggal
+                ? "<div style='font-size:11px;color:#6b7280'>" . Carbon::parse($tanggal)->format('d M Y H:i') . "</div>"
+                : "";
+
+            $html .= "
+                <div style='text-align:center'>
+                    <div style='width:40px;height:40px;border-radius:50%;background:$color;color:white;display:flex;align-items:center;justify-content:center;margin:auto'>
+                        ✔
+                    </div>
+                    <div style='font-size:12px;margin-top:6px'>$label</div>
+                    $tanggalText
+                </div>
+            ";
+        }
+
+        $html .= "</div>";
+
+        // tambahan catatan jika ditolak
+        if ($status === 'rejected') {
+            $html .= "<div style='margin-top:10px;color:#dc2626'>
+                        Catatan: " . ($record->catatan ?? '-') . "
+                      </div>";
+        }
+
+        return new HtmlString($html);
+    }),
                         // 1. Pilih Laboratorium
-                        Select::make('lab_id')
-                            ->label('Laboratorium')
-                            ->placeholder('Pilih Laboratorium')
-                            ->relationship('lab', 'nama_labor')   // sesuaikan dengan nama kolom di tabel labs
-                            ->required()
-                            ->live()
-                            ->afterStateUpdated(function (Set $set) {
-                                $set('jadwal_kosong_id', null);
-                                $set('tanggal_mulai', null);
-                                $set('tanggal_selesai', null);
-                            }),
+                    Select::make('lab_id')
+    ->label('Laboratorium')
+    ->placeholder('Pilih Laboratorium')
+    ->relationship(
+        'lab',
+        'nama_labor',
+        fn ($query) => auth()->user()->isLaboran() ? $query->where('laboran_id', auth()->id()) : $query
+    )
+    ->required()
+    ->live()
+    ->afterStateUpdated(function (Set $set) {
+        $set('jadwal_kosong_id', null);
+        $set('tanggal_mulai', null);
+        $set('tanggal_selesai', null);
+    }),
 
                         DatePicker::make('tanggal')
                             ->dehydrated(false)
@@ -237,13 +319,29 @@ class PeminjamanForm
                             ->required()
                             ->maxLength(500)
                             ->rows(4),
+Placeholder::make('preview_surat')
+    ->label('Surat Peminjaman')
+    ->content(function ($record) {
+        if (!$record?->surat_peminjaman) {
+            return 'Tidak ada file';
+        }
 
+        $url = Storage::url($record->surat_peminjaman);
+
+        return new \Illuminate\Support\HtmlString("
+            <iframe src='{$url}' width='100%' height='600px'></iframe>
+        ");
+    })
+    ->visible(fn ($record) => filled($record?->surat_peminjaman)),
                         FileUpload::make('surat_peminjaman')
                             ->label('Surat Peminjaman (PDF)')
                             ->directory('surat-peminjaman')
                             ->acceptedFileTypes(['application/pdf'])
                             ->maxSize(5120)
-                            ->downloadable(),
+                            ->disk('public')
+                            ->downloadable()
+    ->hidden(fn (string $operation, $record) => $operation =='view' || $operation === 'edit' && $record?->status != 'pending')
+                            ,
                     ]),
 
 

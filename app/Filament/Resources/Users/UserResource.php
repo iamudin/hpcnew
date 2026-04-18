@@ -26,7 +26,10 @@ class UserResource extends Resource
     {
         return UserForm::configure($schema);
     }
-
+public static function canAccess(): bool
+{
+    return auth()->user()->isLaboran();
+}
     public static function table(Table $table): Table
     {
         return UsersTable::configure($table);

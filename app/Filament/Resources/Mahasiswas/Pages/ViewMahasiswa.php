@@ -3,21 +3,17 @@
 namespace App\Filament\Resources\Mahasiswas\Pages;
 
 use App\Filament\Resources\Mahasiswas\MahasiswaResource;
-use Filament\Pages\Dashboard;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Actions\EditAction;
+use Filament\Resources\Pages\ViewRecord;
 
-class ListMahasiswas extends ListRecords
+class ViewMahasiswa extends ViewRecord
 {
     protected static string $resource = MahasiswaResource::class;
-public function mount(): void
-{
-      $this->redirect(Dashboard::getUrl());
-}
- 
+
     protected function getHeaderActions(): array
     {
         return [
-            // CreateAction::make(),
+            EditAction::make()->visible(fn($record) => auth()->user()->isAdmin()),
         ];
     }
 }

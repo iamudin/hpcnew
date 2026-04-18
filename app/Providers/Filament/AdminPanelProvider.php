@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\ProfileMahasiswa;
+use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -11,7 +13,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -24,10 +25,19 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+                ->userMenuItems([
+                    Action::make('Lihat Website')
+                ->url('/')
+                ->openUrlInNewTab()
+                ->icon('heroicon-o-globe-alt'),
+          Action::make('Profileku')
+                ->url(fn() => ProfileMahasiswa::getUrl())
+                ->icon('heroicon-o-user')->visible(fn() => auth()->user()->isMahasiswa()),
+                ])
             ->default()
             ->id('admin')
             ->spa()
-            ->path('/')
+            ->path('auth')
             ->maxContentWidth('full')
             ->renderHook(
             'panels::auth.login.form.after',   // letakkan setelah form login
@@ -47,7 +57,6 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

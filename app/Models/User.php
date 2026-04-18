@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
+use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +12,7 @@ use Illuminate\Support\Str;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements HasAvatar
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -30,6 +29,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function getFilamentAvatarUrl(): ?string
+{
+    return $this->avatar ? asset('storage/' . $this->avatar)
+        : null;
+}
     function isLaboran(){
         return $this->role=='laboran';
     }
@@ -37,6 +41,16 @@ class User extends Authenticatable
     {
         return $this->role == 'mahasiswa';
     }
+    
+    function mahasiswa()
+    {
+        return $this->hasOne(Mahasiswa::class);
+    }
+       function kalab()
+    {
+        return $this->hasOne(Kalab::class);
+    }
+
     function isKalab()
     {
         return $this->role == 'kepala_laboran';
@@ -46,7 +60,24 @@ class User extends Authenticatable
         return $this->role == 'admin';
     }
 
-  
+  public function labs()
+    {
+        if ($this->isKalab()) {
+ 
+    return $this->hasOneThrough(
+        Lab::class,     // tujuan akhir
+        Kalab::class,   // perantara
+        'user_id',      // FK di kalabs → users.id
+        'kalab_id',     // FK di labs → kalabs.id
+        'id',           // PK di users
+        'id'            // PK di kalabs
+    );
+        } elseif ($this->isLaboran()) {
+            return $this->hasMany(Lab::class, 'laboran_id');
+        }
+
+        return null; // Atau bisa juga mengembalikan koleksi kosong
+    }
     /**
      * Get the user's initials
      */

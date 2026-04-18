@@ -2,11 +2,14 @@
 
 namespace App\Filament\Resources\Mahasiswas\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\HtmlString;
 
 class MahasiswaForm
 {
@@ -14,8 +17,25 @@ class MahasiswaForm
     {
         return $schema
             ->components([
+                Section::make('Foto Profile')
+                    ->schema([
+                   Placeholder::make('-')
+    ->content(function ($record) {
+        $avatar = $record->user?->avatar;
+
+        if (!$avatar) {
+            return 'Tidak ada foto';
+        }
+
+        $url = asset('storage/' . $avatar);
+
+        return new HtmlString("
+            <img src='{$url}' style='width: 100%;  object-fit: cover; border-radius:40px' />
+        ");
+    })
+                    ])->columns(1),
                  Section::make('Data Mahasiswa')
-                  ->description('Lengkapi Informasi Singkat Mahasiswa')
+                  ->description('Informasi Singkat Mahasiswa')
                   ->components([
                     TextInput::make('nim')
                     ->required(),
@@ -50,8 +70,8 @@ class MahasiswaForm
                                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))  // hashing otomatis
                                     ->required(fn (string $operation) => $operation === 'create')  // wajib saat create
                                     ->maxLength(255),
-                            ])
+                            ])->visible(fn() => auth()->user()->isAdmin())   // hanya tampil saat create
                         
-            ]);
+            ])->columns(2);
     }
 }

@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class LabResource extends Resource
 {
@@ -32,6 +33,15 @@ class LabResource extends Resource
 public static function canAccess(): bool
 {
     return auth()->user()->isLaboran();
+}
+
+public static function getEloquentQuery(): Builder
+{
+        $query = parent::getEloquentQuery();
+        if(auth()->user()->isLaboran()) {
+            $query->where('laboran_id', auth()->id());
+        }
+    return $query;
 }
     public static function table(Table $table): Table
     {

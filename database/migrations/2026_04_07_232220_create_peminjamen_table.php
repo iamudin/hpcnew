@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('peminjamans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('lab_id')->onDelete('cascade');
-            $table->foreignId('mahasiswa_id');
+            $table->foreignId('mahasiswa_id')->nullable();
             $table->foreignId('jadwal_kosong_id')->nullable();
             $table->dateTime('tanggal_mulai');
             $table->dateTime('tanggal_selesai');
@@ -25,8 +25,8 @@ return new class extends Migration
             $table->dateTime('confirmed_laboran_at')->nullable();
             $table->dateTime('approved_at')->nullable();
             $table->dateTime('rejected_at')->nullable();
-            $table->text('catatan_laboran')->nullable();
-            $table->text('catatan_kepala')->nullable();
+            $table->dateTime('pending_kepala_at')->nullable();
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }

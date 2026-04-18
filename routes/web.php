@@ -7,3 +7,5 @@ Route::get('/auth/{provider}/redirect', [SocialiteController::class, 'redirect']
 
 Route::get('/auth/{provider}/callback', [SocialiteController::class, 'callback'])
     ->name('socialite.callback');
+
+    Route::view('/', 'welcome')->name('home');

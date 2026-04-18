@@ -5,15 +5,19 @@ namespace App\Filament\Resources\Peminjamen;
 use App\Filament\Resources\Peminjamen\Pages\CreatePeminjaman;
 use App\Filament\Resources\Peminjamen\Pages\EditPeminjaman;
 use App\Filament\Resources\Peminjamen\Pages\ListPeminjamen;
+use App\Filament\Resources\Peminjamen\Pages\ViewPeminjaman;
+use App\Filament\Resources\Peminjamen\Pages\ViewPeminjamen;
 use App\Filament\Resources\Peminjamen\Schemas\PeminjamanForm;
 use App\Filament\Resources\Peminjamen\Tables\PeminjamenTable;
+use App\Filament\Resources\Peminjamen\Widgets\PeminjamanOverview;
 use App\Models\Peminjaman;
 use BackedEnum;
-use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class PeminjamanResource extends Resource
 {
@@ -28,6 +32,22 @@ class PeminjamanResource extends Resource
         return PeminjamanForm::configure($schema);
     }
 
+public static function getWidgets(): array
+{
+    return [
+        PeminjamanOverview::class,
+    ];
+}
+public static function getEloquentQuery(): Builder
+{
+        $query = parent::getEloquentQuery();
+        if(auth()->user()->isMahasiswa()) {
+            $query->whereHas('mahasiswa', function (Builder $query) {
+                $query->where('user_id', auth()->id());
+            });
+        }
+    return $query;
+}
     public static function table(Table $table): Table
     {
         return PeminjamenTable::configure($table);
@@ -39,12 +59,26 @@ class PeminjamanResource extends Resource
             //
         ];
     }
- 
-    public static function getPages(): array
+ protected function getCreatedNotification(): ?Notification
+{
+    return Notification::make()
+        ->title('Berhasil')
+        ->body('Peminjaman berhasil disubmit selanjutnya menunggu diproses oleh laboran')
+        ->success();
+}
+protected function getSavedNotification(): ?Notification
+{
+    return Notification::make()
+        ->title('Berhasil')
+        ->body('Peminjaman berhasil diperbarui')
+        ->success();
+}
+public static function getPages(): array
     {
         return [
             'index' => ListPeminjamen::route('/'),
             'create' => CreatePeminjaman::route('/create'),
+            'view' => ViewPeminjaman::route('/{record}'),
             'edit' => EditPeminjaman::route('/{record}/edit'),
         ];
     }

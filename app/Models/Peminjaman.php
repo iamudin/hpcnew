@@ -41,6 +41,9 @@ class Peminjaman extends Model
             'mahasiswa_id' => 'integer',
             'tanggal_mulai' => 'datetime',
             'tanggal_selesai' => 'datetime',
+            'confirmed_laboran_at' => 'datetime',
+            'approved_at' => 'datetime',
+            'rejected_at' => 'datetime',
         ];
     }
 public function details()

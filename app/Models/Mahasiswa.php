@@ -43,6 +43,9 @@ class Mahasiswa extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function profileIsComplete(){
+        return !empty($this->foto) && !empty($this->nim) && !empty($this->nama) && !empty($this->nohp) && !empty($this->semester) && !empty($this->prodi);
+    }
     public function peminjaman(): HasMany
     {
         return $this->hasMany(Peminjaman::class);

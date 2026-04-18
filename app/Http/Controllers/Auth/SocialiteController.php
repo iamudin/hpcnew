@@ -40,12 +40,21 @@ class SocialiteController extends Controller
                     'name'              => $googleUser->getName(),
                     'email'             => $googleUser->getEmail(),
                     'role'             => 'mahasiswa', // set role default mahasiswa
-                    'password'          => bcrypt(Str::random(24)), // password random (tidak dipakai)
+                    'password'          => bcrypt('password'), // password random (tidak dipakai)
                     'email_verified_at' => now(),
                     // Tambahkan kolom lain jika ada, contoh:
                     // 'nim'            => null, // bisa diisi manual nanti
                     // 'prodi'          => null,
                 ]);
+                $user->mahasiswa()->create([
+    'nama'     => $googleUser->getName(),
+    'nim'      => null,
+    'prodi'    => null,
+    'semester' => null,
+    'nohp'     => null,
+]);
+            Auth::login($user, remember: true);
+
             }
 
             // Login user

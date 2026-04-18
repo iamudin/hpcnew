@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nama_labor', 255);
             $table->text('deskripsi')->nullable();
-            $table->foreignId('laboran_id')->nullable()->constrained('users')->onDelete('cascade');;
-            $table->foreignId('kalab_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('laboran_id')->nullable();
+            $table->foreignId('kalab_id')->nullable();
             $table->timestamps();
         });
     }
