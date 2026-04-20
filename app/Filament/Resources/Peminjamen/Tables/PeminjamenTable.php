@@ -2,29 +2,35 @@
 
 namespace App\Filament\Resources\Peminjamen\Tables;
 
+use App\Models\Lab;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 
 class PeminjamenTable
 {
-    public static function configure(Table $table): Table {
+    public static function configure(Table $table): Table
+    {
         return $table
             ->columns([
                 TextColumn::make('lab.nama_labor')
                     ->description(fn($record) => $record->lab->laboran ? 'Nama Laboran : ' . $record->lab->laboran?->name : '')
                     ->searchable()
-                    ->hidden(fn() => in_array(auth()->user()->role, ['laboran', 'kepala_laboran'])),// hanya tampil untuk admin,
+                    ->hidden(fn() => in_array(auth()->user()->role, [ 'kepala_laboran'])),// hanya tampil untuk admin,
                 TextColumn::make('mahasiswa.nama')
                     ->visible(fn() => in_array(auth()->user()->role, ['laboran', 'kepala_laboran'])) // hanya tampil untuk admin
                     ->description(fn($record) => $record->mahasiswa ? 'NIM: ' . $record->mahasiswa?->nim . ' | Prodi: ' . $record->mahasiswa?->prodi : '')
@@ -99,7 +105,49 @@ class PeminjamenTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('lab_id')
+                    ->label('Laboratorium')
+                    ->relationship('lab', 'nama_labor')
+                    ->placeholder('Semua Lab'),
+                Filter::make('created_at')
+                    ->form([
+                       
+                        DatePicker::make('from')->label('Dari Tanggal'),
+                        DatePicker::make('until')->label('Sampai Tanggal'),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when($data['from'], fn($q) => $q->whereDate('tanggal_mulai', '>=', $data['from']))
+                            ->when($data['until'], fn($q) => $q->whereDate('tanggal_mulai', '<=', $data['until']));
+                    })
+            ])
+            ->headerActions([
+                Action::make('print')
+                    ->visible(function ($livewire) {
+                        $filters = $livewire->tableFilters;
+
+                        return !empty($filters['created_at']['from'])
+                            && !empty($filters['created_at']['until']);
+                    })
+
+                    ->label('Cetak Rekap Peminjaman')
+                    ->icon('heroicon-o-printer')
+                    ->action(function ($livewire) {
+                        $filters = $livewire->tableFilters;
+                        $table['data'] = $livewire->getFilteredTableQuery()->get();
+                        $table['tanggal_mulai'] = $filters['created_at']['from'] ?? null;
+                        $table['tanggal_selesai'] = $filters
+                        ['created_at']['until'] ?? null;
+                        $table['nama_labor'] = $filters
+                        ['lab_id']['value'] ? Lab::find($filters
+                            ['lab_id']['value'])->nama_labor : null;
+                        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.rekap', $table);
+
+                        return response()->streamDownload(
+                            fn() => print ($pdf->output()),
+                            'laporan.pdf'
+                        );
+                    })
             ])
             ->actions([
 
@@ -108,79 +156,79 @@ class PeminjamenTable
                 ViewAction::make(),
                 Action::make('tindaklanjut')
                     ->visible(function ($record) {
-                $role = in_array(auth()->user()->role, ['laboran', 'kepala_laboran']);
-                $status = in_array($record->status, ['pending', 'confirmed_laboran']); 
-                if(auth()->user()->isLaboran()){
-                    return $role && $status;
+                        $role = in_array(auth()->user()->role, ['laboran', 'kepala_laboran']);
+                        $status = in_array($record->status, ['pending', 'confirmed_laboran']);
+                        if (auth()->user()->isLaboran()) {
+                            return $role && $status;
                         } elseif (auth()->user()->isKalab()) {
                             return $role && $record->status === 'pending_kepala';
                         }
-                })
-    ->label('Tindak Lanjut')
-    ->icon('heroicon-o-pencil-square')
-    ->color('warning')
+                    })
+                    ->label('Tindak Lanjut')
+                    ->icon('heroicon-o-pencil-square')
+                    ->color('warning')
 
-    ->form([
-        Select::make('status')
-            ->label('Status Peminjaman')
-            ->options(auth()->user()->isLaboran() ? [
-                'confirmed_laboran' => 'Konfirmasi Laboran',
-                'pending_kepala' => 'Menunggu Persetujuan Kepala',
-                'rejected' => 'Ditolak',
-              
-            ] : [
-                'approved' => 'Disetujui',
-                'rejected' => 'Ditolak',
-            ])
-              ->default(fn ($record) => $record?->status)
-            ->required(),
+                    ->form([
+                        Select::make('status')
+                            ->label('Status Peminjaman')
+                            ->options(auth()->user()->isLaboran() ? [
+                                'confirmed_laboran' => 'Konfirmasi Laboran',
+                                'pending_kepala' => 'Menunggu Persetujuan Kepala',
+                                'rejected' => 'Ditolak',
 
-        Textarea::make('catatan')
-            ->label('Catatan')
-            ->rows(4)
-            ->default(fn ($record) => $record?->catatan)
-            ->placeholder('Masukkan catatan jika diperlukan...')
-            ->required(fn ($get) => $get('status') === 'rejected'),
-    ])
+                            ] : [
+                                'approved' => 'Disetujui',
+                                'rejected' => 'Ditolak',
+                            ])
+                            ->default(fn($record) => $record?->status)
+                            ->required(),
 
-    ->action(function ($record, array $data) {
+                        Textarea::make('catatan')
+                            ->label('Catatan')
+                            ->rows(4)
+                            ->default(fn($record) => $record?->catatan)
+                            ->placeholder('Masukkan catatan jika diperlukan...')
+                            ->required(fn($get) => $get('status') === 'rejected'),
+                    ])
 
-        $update = [
-            'status' => $data['status'],
-            'catatan' => $data['catatan'] ?? null,
-        ];
+                    ->action(function ($record, array $data) {
 
-        // 🔥 auto set timestamp berdasarkan status
-        if ($data['status'] === 'confirmed_laboran') {
-            $update['confirmed_laboran_at'] = now();
-        }
+                        $update = [
+                            'status' => $data['status'],
+                            'catatan' => $data['catatan'] ?? null,
+                        ];
 
-        if ($data['status'] === 'approved') {
-            $update['approved_at'] = now();
-        }
+                        // 🔥 auto set timestamp berdasarkan status
+                        if ($data['status'] === 'confirmed_laboran') {
+                            $update['confirmed_laboran_at'] = now();
+                        }
 
-        if ($data['status'] === 'rejected') {
-            $update['rejected_at'] = now();
-        }
+                        if ($data['status'] === 'approved') {
+                            $update['approved_at'] = now();
+                        }
 
-        $record->update($update);
+                        if ($data['status'] === 'rejected') {
+                            $update['rejected_at'] = now();
+                        }
 
-        Notification::make()
-            ->title('Berhasil')
-            ->body('Tindak lanjut berhasil disimpan')
-            ->success()
-            ->send();
-    })
+                        $record->update($update);
 
-    ->modalHeading('Tindak Lanjut Peminjaman')
-    ->modalSubmitActionLabel('Simpan')
-    ->modalWidth('lg'),
-                EditAction::make()->visible(fn($record) => auth()->user()->isMahasiswa() && $record->status === 'pending' || auth()->user()->isLaboran()),
-                DeleteAction::make()->visible(fn($record) => auth()->user()->isMahasiswa() && $record->status === 'pending' || auth()->user()->isLaboran()),
+                        Notification::make()
+                            ->title('Berhasil')
+                            ->body('Tindak lanjut berhasil disimpan')
+                            ->success()
+                            ->send();
+                    })
+
+                    ->modalHeading('Tindak Lanjut Peminjaman')
+                    ->modalSubmitActionLabel('Simpan')
+                    ->modalWidth('lg'),
+                EditAction::make()->visible(fn($record) => $record->status === 'pending'),
+                DeleteAction::make()->visible(fn($record) => $record->status === 'pending'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                DeleteBulkAction::make(),
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

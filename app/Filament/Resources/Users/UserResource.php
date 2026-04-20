@@ -26,6 +26,11 @@ class UserResource extends Resource
     {
         return UserForm::configure($schema);
     }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 public static function canAccess(): bool
 {
     return auth()->user()->isLaboran();

@@ -25,7 +25,7 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-                ->userMenuItems([
+            ->userMenuItems([
                     Action::make('Lihat Website')
                 ->url('/')
                 ->openUrlInNewTab()

@@ -7,8 +7,11 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class LabsTable
 {
@@ -19,6 +22,8 @@ class LabsTable
                 TextColumn::make('nama_labor')
                     ->searchable(),
                 TextColumn::make('laboran.name')
+                ->hidden(fn() =>auth()->user()->isLaboran())
+
                 ->description(fn($record)=>$record->laboran->email)   // contoh akses relasi nested (laboran -> email)
                     ->searchable(),
                 TextColumn::make('kalab.nama')
@@ -36,7 +41,16 @@ class LabsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('from'),
+                        DatePicker::make('until'),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when($data['from'], fn($q) => $q->whereDate('created_at', '>=', $data['from']))
+                            ->when($data['until'], fn($q) => $q->whereDate('created_at', '<=', $data['until']));
+                    })
             ])
             ->recordActions([
            ViewAction::make()

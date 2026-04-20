@@ -13,7 +13,7 @@ class ListLabs extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make(),  // hanya tampilkan tombol create untuk laboran
         ];
     }
 }

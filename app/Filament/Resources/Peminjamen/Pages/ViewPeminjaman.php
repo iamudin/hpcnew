@@ -13,7 +13,7 @@ class ViewPeminjaman extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make()->visible(fn($record)=>auth()->user()->isMahasiswa() && $record->status === 'pending' || auth()->user()->isLaboran()),
+            EditAction::make()->visible(fn($record)=> $record->status === 'pending'),
         ];
     }
 }

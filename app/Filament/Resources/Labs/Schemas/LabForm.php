@@ -75,6 +75,9 @@ Section::make('Jadwal Semester')
                           Hidden::make('name')
                                     ->default(fn ($get) => $get('..nama'))   // fallback jika live tidak cukup
                                     ->dehydrated(true),
+                                Hidden::make('role')
+                                    ->default('kepala_laboran')   // fallback jika live tidak cukup
+                                    ->dehydrated(true),
                                 TextInput::make('email')
                                     ->label('Email')
                                     ->email()

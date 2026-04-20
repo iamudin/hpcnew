@@ -4,12 +4,9 @@ namespace App\Filament\Resources\Peminjamen\Pages;
 
 use App\Filament\Resources\Peminjamen\PeminjamanResource;
 use App\Filament\Resources\Peminjamen\Widgets\PeminjamanOverview;
-use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
-use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\ExposesTableToWidgets;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Support\HtmlString;
 
 class ListPeminjamen extends ListRecords
 {
@@ -18,7 +15,7 @@ class ListPeminjamen extends ListRecords
   
     protected function getHeaderActions(): array {
         return [
-    CreateAction::make(),
+    CreateAction::make()->hidden(fn() => auth()->user()->isKalab()),
         ];
     }
   protected function getHeaderWidgets(): array
