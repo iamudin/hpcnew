@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('avatar')->nullable();
             $table->string('email')->unique();
-            $table->enum('status',['active','inactive'])->nullable();
+            $table->boolean('is_active')->default(0);
             $table->string('role')->default('laboran')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
