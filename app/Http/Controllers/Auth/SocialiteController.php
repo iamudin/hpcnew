@@ -7,6 +7,7 @@ use App\Models\User;
 use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller
@@ -25,10 +26,11 @@ class SocialiteController extends Controller
             $googleUser = Socialite::driver($provider)->user();
 
             // Validasi hanya email mahasiswa (sesuaikan domain kampus kamu)
-            $allowedDomain = '@gmail.com'; // GANTI dengan domain kampus kamu
+            $allowedDomain = config('app.allow_domain_sso'); // GANTI dengan domain kampus kamu
             if (!str_ends_with(strtolower($googleUser->getEmail()), $allowedDomain)) {
-                return redirect()->route('filament.admin.login')
-                    ->with('error', 'Hanya email mahasiswa yang diizinkan login.');
+         return redirect()->route('filament.admin.auth.login')
+    ->with('filament_login_error', 'Email tidak didukung. Silahkan Gunakan email kampus.')
+    ->with('filament_login_email', $googleUser->getEmail());
             }
 
             // Cari user berdasarkan email

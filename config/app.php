@@ -12,7 +12,7 @@ return [
     | other UI elements where an application name needs to be displayed.
     |
     */
-
+    'allow_domain_sso'=> env('ALLOW_DOMAIN_SSO','@gmail.com'),
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

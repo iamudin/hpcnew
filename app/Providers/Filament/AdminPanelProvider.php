@@ -5,7 +5,6 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Account;
 use App\Filament\Pages\ProfileMahasiswa;
 use Filament\Actions\Action;
-use Filament\Auth\Pages\EditProfile;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -37,11 +36,15 @@ class AdminPanelProvider extends PanelProvider
     PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
     fn () => view('login.script')
 );
+
+FilamentView::registerRenderHook(
+    PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
+    fn () => view('login-error')
+);
     }
     public function panel(Panel $panel): Panel
     {
         return $panel
-        
         ->brandName('SIPL')
         ->brandLogoHeight(fn()=>request()->routeIs('filament.admin.auth.login') ? '112px':'40px')
         ->brandLogo(asset('light.png'))
