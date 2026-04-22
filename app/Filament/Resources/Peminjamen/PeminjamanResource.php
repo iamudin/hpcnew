@@ -52,7 +52,10 @@ public static function getEloquentQuery(): Builder
     {
         return PeminjamenTable::configure($table);
     }
-
+public static function canAccess(): bool
+{
+    return in_array(auth()->user()->role,['laboran','kepala_laboran','mahasiswa']);
+}
     public static function getRelations(): array
     {
         return [

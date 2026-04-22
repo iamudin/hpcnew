@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Peminjaman;
+use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -37,13 +38,23 @@ class StatsOverview extends StatsOverviewWidget
                     ->url(route('filament.admin.resources.peminjaman.index'));
             }
             return $stats;
+        } elseif (auth()->user()->isMahasiswa()) {
+
+            return [
+                Stat::make('Total Peminjaman', auth()->user()->isMahasiswa() ? auth()->user()->mahasiswa->peminjaman->count() : 0)
+                    ->color('primary')
+                    ->description(fn() => !auth()->user()->mahasiswa->peminjaman->count() ? 'Anda belum pernah melakukan peminjaman' : 'Total peminjaman yang telah Anda lakukan')
+                    ->icon('heroicon-o-document-text')
+                    ->url(route('filament.admin.resources.peminjaman.index'))
+            ];
+        }else{
+            return [
+                Stat::make('Total User',User::count())
+                    ->color('primary')
+                    ->description( 'Total User')
+                    ->icon('heroicon-o-document-text')
+                    ->url(route('filament.admin.resources.users.index'))
+            ];
         }
-        return [
-            Stat::make('Total Peminjaman', auth()->user()->isMahasiswa() ? auth()->user()->mahasiswa->peminjaman->count() : 0)
-                ->color('primary')
-                ->description(fn() =>  !auth()->user()->mahasiswa->peminjaman->count() ? 'Anda belum pernah melakukan peminjaman' : 'Total peminjaman yang telah Anda lakukan')
-                ->icon('heroicon-o-document-text')
-                ->url(route('filament.admin.resources.peminjaman.index'))
-        ];
     }
 }

@@ -26,14 +26,17 @@ class UserResource extends Resource
     {
         return UserForm::configure($schema);
     }
-
+public static function getBreadcrumb(): string
+{
+    return 'User';
+}
     public static function shouldRegisterNavigation(): bool
     {
-        return false;
+        return true;
     }
 public static function canAccess(): bool
 {
-    return auth()->user()->isLaboran();
+    return auth()->user()->isAdmin();
 }
     public static function table(Table $table): Table
     {
