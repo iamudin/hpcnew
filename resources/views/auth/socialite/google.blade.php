@@ -13,7 +13,7 @@
     <!-- Tombol -->
     <button
         type="button"
-        onclick="loginWithGooglePopup()"
+        onclick="window.location.href='{{ route('socialite.redirect', 'google') }}'"
         style="
             display: flex;
             align-items: center;
@@ -46,28 +46,3 @@
     </button>
 
 </div>
-
-<script>
-function loginWithGooglePopup() {
-    const url = "{{ route('socialite.redirect', 'google') }}";
-
-    const width = 500;
-    const height = 600;
-    const left = (window.innerWidth / 2) - (width / 2);
-    const top = (window.innerHeight / 2) - (height / 2);
-
-    const popup = window.open(
-        url,
-        'Login Google',
-        `width=${width},height=${height},top=${top},left=${left}`
-    );
-
-    // OPTIONAL: cek kalau login selesai (popup close)
-    const timer = setInterval(() => {
-        if (popup.closed) {
-            clearInterval(timer);
-            window.location.reload(); // reload setelah login
-        }
-    }, 500);
-}
-</script>
