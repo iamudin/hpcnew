@@ -58,7 +58,8 @@ FilamentView::registerRenderHook(
                 ->url('/')
                 ->openUrlInNewTab()
                 ->icon('heroicon-o-globe-alt'),
-          Action::make('Akun')
+          Action::make('ProfileMahasiswa')
+          ->label('Akun')
                 ->url(fn() => ProfileMahasiswa::getUrl())
                 ->icon('heroicon-o-user')->visible(fn() => auth()->user()->isMahasiswa()),
             Action::make('Akun')
