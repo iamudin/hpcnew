@@ -44,6 +44,7 @@ class SocialiteController extends Controller
                     'role'             => 'mahasiswa', // set role default mahasiswa
                     'password'          => bcrypt('password'), // password random (tidak dipakai)
                     'email_verified_at' => now(),
+                    'is_active' => true,
                     // Tambahkan kolom lain jika ada, contoh:
                     // 'nim'            => null, // bisa diisi manual nanti
                     // 'prodi'          => null,
