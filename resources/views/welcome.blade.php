@@ -52,12 +52,10 @@
       <div class="flex justify-between items-center">
         <!-- Logo -->
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/30">
-            <i class="fa-solid fa-microchip text-slate-900 text-2xl"></i>
-          </div>
+   
           <div>
-            <span class="font-bold text-2xl tracking-tight text-white">Lab TI</span>
-            <span class="text-cyan-400 text-sm font-medium block -mt-1">Polbeng</span>
+            <img src="/dark.png" class="h-12">
+       
           </div>
         </div>
 
@@ -127,10 +125,10 @@
       <!-- Hero Illustration -->
       <div class="relative hidden md:block">
         <div class="bg-slate-900/70 backdrop-blur-xl border border-slate-700 rounded-3xl p-6 shadow-2xl">
-          <img src="https://picsum.photos/id/1015/800/600" 
+          <img src="/lab.jpeg" 
                alt="Laboratorium Komputer TI Polbeng" 
                class="rounded-2xl shadow-xl w-full object-cover">
-          <div class="absolute -bottom-4 -right-4 bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl">
+          {{-- <div class="absolute -bottom-4 -right-4 bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl">
             <div class="flex items-center gap-4">
               <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-2xl flex items-center justify-center">
                 <i class="fa-solid fa-circle-check text-3xl"></i>
@@ -140,7 +138,7 @@
                 <p class="text-sm text-slate-400">3 lab kosong hari ini</p>
               </div>
             </div>
-          </div>
+          </div> --}}
         </div>
       </div>
     </div>

@@ -1,11 +1,8 @@
 <?php
 
 namespace App\Filament\Resources\Labs\Schemas;
-
-use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -28,13 +25,13 @@ Section::make('Jadwal Semester')
     ->schema([
         DatePicker::make('tanggal_mulai_semester')
             ->label('Tanggal Mulai Semester')
-            ->required()
+            ->required(fn (string $operation) => $operation === 'create') 
             ->dehydrated(false)
             ->live(),
 
         DatePicker::make('tanggal_selesai_semester')
             ->label('Tanggal Selesai Semester')
-            ->required()
+            ->required(fn (string $operation) => $operation === 'create') 
             ->dehydrated(false)
 
             ->afterOrEqual('tanggal_mulai_semester'),
