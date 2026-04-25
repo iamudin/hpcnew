@@ -27,7 +27,8 @@ class LabsTable
                 ->description(fn($record)=>$record->laboran->email)   // contoh akses relasi nested (laboran -> email)
                     ->searchable(),
                 TextColumn::make('kalab.nama')
-                ->description(fn($record)=>$record->kalab->user->email)   // contoh akses relasi nested (kalab -> user -> email)
+                ->description(fn($record)=>$record->kalab?->user->email)   // contoh akses relasi nested (kalab -> user -> email)
+                    ->default("Belum ada Kepala Laboran")
                     ->label('Kepala Lab')
                     ->numeric()
                     ->sortable(),
