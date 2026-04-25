@@ -95,6 +95,7 @@ class LabForm
 
                                 TextInput::make('nip')
                                     ->label('NIP')
+                                    ->required()
                                     ->nullable(),
 
                                 TextInput::make('nama')
@@ -105,6 +106,8 @@ class LabForm
                                     }),
 
                                 TextInput::make('nohp')
+                                ->required()
+
                                     ->label('Nomor HP')
                                     ->tel()
                                     ->nullable(),
