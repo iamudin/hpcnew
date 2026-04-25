@@ -56,7 +56,7 @@ class LabsTable
            ViewAction::make()
     ->modal(false)                    // nonaktifkan modal
     ->url(fn ($record) => LabResource::getUrl('view', ['record' => $record])),
-                EditAction::make()->visible(fn($record) => auth()->user()->id === $record->laboran_id),  // hanya tampilkan edit jika user adalah laboran yang bertanggung jawab
+                EditAction::make()->visible(fn($record) => auth()->user()->id == $record->laboran_id),  // hanya tampilkan edit jika user adalah laboran yang bertanggung jawab
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
