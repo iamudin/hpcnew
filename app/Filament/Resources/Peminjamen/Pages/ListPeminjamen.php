@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Peminjamen\Pages;
 
 use App\Filament\Resources\Peminjamen\PeminjamanResource;
+use App\Filament\Resources\Peminjamen\Widgets\PeminjamanChart;
 use App\Filament\Resources\Peminjamen\Widgets\PeminjamanOverview;
 use Filament\Actions\CreateAction;
 use Filament\Pages\Concerns\ExposesTableToWidgets;

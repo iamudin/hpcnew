@@ -6,9 +6,9 @@ use App\Filament\Resources\Peminjamen\Pages\CreatePeminjaman;
 use App\Filament\Resources\Peminjamen\Pages\EditPeminjaman;
 use App\Filament\Resources\Peminjamen\Pages\ListPeminjamen;
 use App\Filament\Resources\Peminjamen\Pages\ViewPeminjaman;
-use App\Filament\Resources\Peminjamen\Pages\ViewPeminjamen;
 use App\Filament\Resources\Peminjamen\Schemas\PeminjamanForm;
 use App\Filament\Resources\Peminjamen\Tables\PeminjamenTable;
+use App\Filament\Resources\Peminjamen\Widgets\PeminjamanChart;
 use App\Filament\Resources\Peminjamen\Widgets\PeminjamanOverview;
 use App\Models\Peminjaman;
 use BackedEnum;
@@ -32,12 +32,7 @@ class PeminjamanResource extends Resource
         return PeminjamanForm::configure($schema);
     }
 
-public static function getWidgets(): array
-{
-    return [
-        PeminjamanOverview::class,
-    ];
-}
+
 public static function getEloquentQuery(): Builder
 {
         $query = parent::getEloquentQuery();
