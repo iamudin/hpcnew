@@ -16,7 +16,7 @@ class UsersTable
     {
         return $table
             ->modifyQueryUsing(
-                fn(Builder $query) => $query->withoutGlobalScopes()
+                fn(Builder $query) => $query->whereNotIn('role',['admin'])
             )
             ->columns([
                 TextColumn::make('name')->label('Nama')
