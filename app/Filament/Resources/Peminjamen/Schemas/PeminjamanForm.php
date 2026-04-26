@@ -113,7 +113,7 @@ Placeholder::make('status_progress')->visible(fn (string $operation) => $operati
     ->relationship(
         'lab',
         'nama_labor',
-        fn ($query) => auth()->user()->isLaboran() ? $query->where('laboran_id', auth()->id()) : $query
+        fn ($query) => auth()->user()->isLaboran() ? $query->where('laboran_id', auth()->id()) : $query->whereHas('laboran')->whereHas('kalab')->whereHas('jadwal')
     )
     ->required()
     ->live()
