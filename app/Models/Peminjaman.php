@@ -46,10 +46,6 @@ class Peminjaman extends Model
             'rejected_at' => 'datetime',
         ];
     }
-public function details()
-{
-    return $this->hasMany(PeminjamanDetail::class);
-}
     public function lab(): BelongsTo
     {
         return $this->belongsTo(Lab::class);

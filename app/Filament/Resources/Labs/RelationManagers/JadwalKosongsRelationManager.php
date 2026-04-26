@@ -5,7 +5,10 @@ namespace App\Filament\Resources\Labs\RelationManagers;
 use App\Filament\Resources\JadwalKosongs\Tables\JadwalKosongsTable;
 use App\Filament\Resources\Labs\LabResource;
 use Dom\Text;
+use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -14,7 +17,9 @@ use Filament\Forms\Components\Toggle;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class JadwalKosongsRelationManager extends RelationManager
 {
@@ -46,6 +51,7 @@ class JadwalKosongsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            // ->query(fn($query): Builder => $query->with('peminjaman'))
             ->columns([
           
                 TextColumn::make('hari')
@@ -60,11 +66,13 @@ class JadwalKosongsRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('keterangan')
                     ->searchable(),
-            
+            TextColumn::make('status_pinjam')->default(fn($record)=> $record->peminjaman ? 'Ada peminjaman' : 'Belum ada'),
+                ToggleColumn::make('aktif')->label('Status Jadwal')->visible(fn($record) => isset($record->peminjaman)),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -72,6 +80,12 @@ class JadwalKosongsRelationManager extends RelationManager
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make()->visible(fn($record) => !$record->peminjaman)
+            ])
+               ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
             ])
             ->headerActions([
             ]);

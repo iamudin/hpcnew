@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class JadwalKosong extends Model
 {
@@ -45,9 +46,9 @@ class JadwalKosong extends Model
         return $this->belongsTo(Lab::class);
     }
 
-        public function peminjaman(): HasMany
+        public function peminjaman(): HasOne
     {
-        return $this->hasMany(Peminjaman::class);
+        return $this->hasOne(Peminjaman::class);
     }
 
 }

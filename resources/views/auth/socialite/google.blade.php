@@ -6,7 +6,7 @@
             Login dengan Google
         </div>
         <div style="font-size: 12px; color: #dc2626; font-weight: 500;">
-            *Khusus mahasiswa (email kampus)
+            * Khusus mahasiswa
         </div>
     </div>
 
