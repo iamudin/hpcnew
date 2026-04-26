@@ -67,7 +67,7 @@ class JadwalKosongsRelationManager extends RelationManager
                 TextColumn::make('keterangan')
                     ->searchable(),
             TextColumn::make('status_pinjam')->default(fn($record)=> $record->peminjaman ? 'Ada peminjaman' : 'Belum ada'),
-                ToggleColumn::make('aktif')->label('Status Jadwal')->visible(fn($record) => isset($record->peminjaman)),
+            
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -79,7 +79,7 @@ class JadwalKosongsRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()->visible(fn($record) => !$record->peminjaman),
                 DeleteAction::make()->visible(fn($record) => !$record->peminjaman)
             ])
                ->toolbarActions([
