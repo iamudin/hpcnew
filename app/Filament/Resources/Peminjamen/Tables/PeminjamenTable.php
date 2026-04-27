@@ -233,7 +233,7 @@ class PeminjamenTable
                             $update['rejected_at'] = now();
                             $message = "📢 *Sistem Peminjaman Laboratorium*\n\n"
                                 . "Halo {$record->mahasiswa->nama},\n\n"
-                                . "Permohonan peminjaman laboratorium {$record->lab->nama_labor} pada tanggal *{$record->tanggal_mulai}* saat ini  *ditolak* karena *{$record->catatan}*.\n\n"
+                                . "Permohonan peminjaman laboratorium {$record->lab->nama_labor} pada tanggal *{$record->tanggal_mulai}* saat ini  *ditolak* karena *{$data['catatan']}*.\n\n"
                                 . "Terima kasih 🙏";
 
                             // kirim WA (tanpa nunggu response)

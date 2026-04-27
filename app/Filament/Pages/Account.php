@@ -72,7 +72,6 @@ FileUpload::make('avatar')
     ->imageEditor(),
      TextInput::make('nohp')
                         ->label('No Whatsapp (aktif)')
-                        ->numeric()
                         ->placeholder("62812345678")
                         ->visible(fn()=>auth()->user()->isLaboran()),
 
