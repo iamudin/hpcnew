@@ -255,7 +255,7 @@ class PeminjamenTable
                     ->modalSubmitActionLabel('Simpan')
                     ->modalWidth('lg'),
                 EditAction::make()->visible(fn($record) => $record->status == 'pending'),
-                DeleteAction::make(),
+                DeleteAction::make()->visible(fn($record)=> auth()->user()->isMahasiswa() && $record->status=='pending' || auth()->user()->isLaboran()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
