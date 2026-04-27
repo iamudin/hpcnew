@@ -24,13 +24,13 @@ protected function afterCreate():void
                 ->translatedFormat('d F Y H:i:s');
             // pesan WA
             $message = "📢 *Sistem Peminjaman Laboratorium *\n\n"
-                . "Halo laboran {$data->mahasiswa->nama},\n\n"
+                . "Halo laboran {$data->lab->nama_labor},\n\n"
                 . "Saat ini ada  permohonan peminjaman laboratorium :\n\n"
                 . "📋 Detail Pengajuan:\n"
                 . "• Tanggal Peminjaman : {$tanggal}\n"
                 . "• Tanggal Pengajuan : {$diajukan}\n"
                 . "• Keperluan : {$data->keperluan}\n\n"
-                . "Status: *Menunggu Persetujuan*\n\n\n\n"
+                . "Status: *Menunggu Persetujuan*\n\n"
                 . "Silahkan ditindaklanjuti ya...\n\n"
                 . "Terima kasih 🙏";
 
