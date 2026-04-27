@@ -23,7 +23,7 @@ protected function afterCreate():void
             $diajukan = \Carbon\Carbon::parse($data->created_at)
                 ->translatedFormat('d F Y H:i:s');
             // pesan WA
-            $message = "📢 *Sistem Peminjaman Laboratorium *\n\n"
+            $message = "📢 *Sistem Peminjaman Laboratorium*\n\n"
                 . "Halo laboran {$data->lab->nama_labor},\n\n"
                 . "Saat ini ada  permohonan peminjaman laboratorium :\n\n"
                 . "📋 Detail Pengajuan:\n"

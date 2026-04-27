@@ -205,8 +205,8 @@ class PeminjamenTable
                         }
                         if ($data['status'] == 'pending_kepala') {
 
-                            $message = "📢 *Sistem Peminjaman Laboratorium *\n\n"
-                                . "Halo Kepala Laboran *{$record->lab->nama_lab}*,\n\n"
+                            $message = "📢 *Sistem Peminjaman Laboratorium*\n\n"
+                                . "Halo Kepala Laboran *{$record->lab->nama_labor}*,\n\n"
                                 . "Saat ini ada Permohonan peminjaman laboratorium pada tanggal {$record->tanggal_mulai} mohon ditindaklanjuti.\n\n"
                                 . "Terima kasih 🙏";
 
@@ -217,7 +217,7 @@ class PeminjamenTable
                         if ($data['status'] == 'approved') {
                             $update['approved_at'] = now();
 
-                                $message = "📢 *Sistem Peminjaman Laboratorium *\n\n"
+                                $message = "📢 *Sistem Peminjaman Laboratorium*\n\n"
                                     . "Halo {$record->mahasiswa->nama},\n\n"
                                     . "Permohonan peminjaman laboratorium {$record->lab->nama_labor} pada tanggal {$record->tanggal_mulai} anda telah *disetujui*.\n\n"
                                     . "Terima kasih 🙏";
@@ -231,7 +231,7 @@ class PeminjamenTable
 
                         if ($data['status'] === 'rejected') {
                             $update['rejected_at'] = now();
-                            $message = "📢 *Sistem Peminjaman Laboratorium *\n\n"
+                            $message = "📢 *Sistem Peminjaman Laboratorium*\n\n"
                                 . "Halo {$record->mahasiswa->nama},\n\n"
                                 . "Permohonan peminjaman laboratorium {$record->lab->nama_labor} pada tanggal *{$record->tanggal_mulai}* saat ini  *ditolak* karena *{$record->catatan}*.\n\n"
                                 . "Terima kasih 🙏";
