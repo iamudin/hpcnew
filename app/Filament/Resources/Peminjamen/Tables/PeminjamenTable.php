@@ -254,8 +254,8 @@ class PeminjamenTable
                     ->modalHeading('Tindak Lanjut Peminjaman')
                     ->modalSubmitActionLabel('Simpan')
                     ->modalWidth('lg'),
-                EditAction::make()->visible(fn($record) => $record->status === 'pending'),
-                DeleteAction::make()->visible(fn($record) => $record->status === 'pending'),
+                EditAction::make()->visible(fn($record) => $record->status == 'pending'),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
