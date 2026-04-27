@@ -6,6 +6,10 @@ return [
     'client_secret' => env('GOOGLE_CLIENT_SECRET'),
     'redirect'      => env('GOOGLE_CALLBACK_URL'),
 ],
+'whatsapp'=>[
+'url'=>env('WHATSAPP_URL'),
+'session'=>env('WHATSAPP_SESSION')
+],
     /*
     |--------------------------------------------------------------------------
     | Third Party Services

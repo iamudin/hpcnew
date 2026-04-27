@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Peminjamen\Tables;
 
 use App\Models\Lab;
+use App\Services\WaSender;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -161,7 +162,7 @@ class PeminjamenTable
                         if (auth()->user()->isLaboran()) {
                             return $role && $status;
                         } elseif (auth()->user()->isKalab()) {
-                            return $role && $record->status === 'pending_kepala';
+                            return $role && $record->status == 'pending_kepala';
                         }
                     })
                     ->label('Tindak Lanjut')
@@ -199,16 +200,46 @@ class PeminjamenTable
                         ];
 
                         // 🔥 auto set timestamp berdasarkan status
-                        if ($data['status'] === 'confirmed_laboran') {
+                        if ($data['status'] == 'confirmed_laboran') {
                             $update['confirmed_laboran_at'] = now();
                         }
+                        if ($data['status'] == 'pending_kepala') {
 
-                        if ($data['status'] === 'approved') {
+                            $message = "📢 *Sistem Peminjaman Laboratorium *\n\n"
+                                . "Halo Kepala Laboran *{$record->lab->nama_lab}*,\n\n"
+                                . "Saat ini ada Permohonan peminjaman laboratorium pada tanggal {$record->tanggal_mulai} mohon ditindaklanjuti.\n\n"
+                                . "Terima kasih 🙏";
+
+                            $nohp = $record->lab->kalab->nohp;
+
+                            app(WaSender::class)->send($nohp, $message);
+                        }
+                        if ($data['status'] == 'approved') {
                             $update['approved_at'] = now();
+
+                                $message = "📢 *Sistem Peminjaman Laboratorium *\n\n"
+                                    . "Halo {$record->mahasiswa->nama},\n\n"
+                                    . "Permohonan peminjaman laboratorium {$record->lab->nama_labor} pada tanggal {$record->tanggal_mulai} anda telah *disetujui*.\n\n"
+                                    . "Terima kasih 🙏";
+
+                                // kirim WA (tanpa nunggu response)
+                                $nohp = $record->mahasiswa->nohp;
+
+                                app(WaSender::class)->send($nohp, $message);
+
                         }
 
                         if ($data['status'] === 'rejected') {
                             $update['rejected_at'] = now();
+                            $message = "📢 *Sistem Peminjaman Laboratorium *\n\n"
+                                . "Halo {$record->mahasiswa->nama},\n\n"
+                                . "Permohonan peminjaman laboratorium {$record->lab->nama_labor} pada tanggal *{$record->tanggal_mulai}* saat ini  *ditolak* karena *{$record->catatan}*.\n\n"
+                                . "Terima kasih 🙏";
+
+                            // kirim WA (tanpa nunggu response)
+                            $nohp = $record->mahasiswa->nohp;
+
+                            app(WaSender::class)->send($nohp, $message);
                         }
 
                         $record->update($update);

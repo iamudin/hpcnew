@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Peminjamen\Pages;
 
 use App\Filament\Resources\Peminjamen\PeminjamanResource;
+use App\Services\WaSender;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
@@ -10,7 +11,37 @@ use Filament\Resources\Pages\CreateRecord;
 class CreatePeminjaman extends CreateRecord
 {
     protected static string $resource = PeminjamanResource::class;
-       protected  function getFormActions(): array
+
+protected function afterCreate():void
+{
+    if(auth()->user()->isMahasiswa())
+{
+            $data = $this->record;
+            // format tanggal biar rapi
+            $tanggal = \Carbon\Carbon::parse($data->tanggal_mulai)
+                ->translatedFormat('d F Y');
+            $diajukan = \Carbon\Carbon::parse($data->created_at)
+                ->translatedFormat('d F Y H:i:s');
+            // pesan WA
+            $message = "📢 *Sistem Peminjaman Laboratorium *\n\n"
+                . "Halo {$data->mahasiswa->nama},\n\n"
+                . "Permohonan peminjaman laboratorium telah *berhasil diajukan*.\n\n"
+                . "📋 Detail Pengajuan:\n"
+                . "• Nama Labor : {$data->lab->nama_labor}\n"
+                . "• Tanggal Peminjaman : {$tanggal}\n"
+                . "• Tanggal Pengajuan : {$diajukan}\n"
+                . "• Keperluan : {$data->keperluan}\n\n"
+                . "Status: *Menunggu Persetujuan*\n\n"
+                . "Terima kasih 🙏";
+
+            // kirim WA (tanpa nunggu response)
+            $nohp = auth()->user()->mahasiswa->nohp;
+
+            app(WaSender::class)->send($nohp, $message);
+
+        } 
+}
+    protected  function getFormActions(): array
 {
     return [
         Action::make('create')

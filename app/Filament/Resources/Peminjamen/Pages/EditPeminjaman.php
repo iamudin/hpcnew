@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Peminjamen\Pages;
 
 use App\Filament\Resources\Peminjamen\PeminjamanResource;
 use Filament\Actions\Action;
-use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
