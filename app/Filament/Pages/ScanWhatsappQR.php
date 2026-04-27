@@ -11,7 +11,15 @@ class ScanWhatsappQR extends Page
 
     public ?string $qr = null;
     public ?string $status = null;
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 
+    public static function canAccess(): bool
+    {
+        return !auth()->user()->isAdmin();
+    }
     public function mount(): void
     {
         $this->loadQr();
