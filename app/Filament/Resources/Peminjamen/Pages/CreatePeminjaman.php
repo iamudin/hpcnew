@@ -24,18 +24,18 @@ protected function afterCreate():void
                 ->translatedFormat('d F Y H:i:s');
             // pesan WA
             $message = "📢 *Sistem Peminjaman Laboratorium *\n\n"
-                . "Halo {$data->mahasiswa->nama},\n\n"
-                . "Permohonan peminjaman laboratorium telah *berhasil diajukan*.\n\n"
+                . "Halo laboran {$data->mahasiswa->nama},\n\n"
+                . "Saat ini ada  permohonan peminjaman laboratorium :\n\n"
                 . "📋 Detail Pengajuan:\n"
-                . "• Nama Labor : {$data->lab->nama_labor}\n"
                 . "• Tanggal Peminjaman : {$tanggal}\n"
                 . "• Tanggal Pengajuan : {$diajukan}\n"
                 . "• Keperluan : {$data->keperluan}\n\n"
-                . "Status: *Menunggu Persetujuan*\n\n"
+                . "Status: *Menunggu Persetujuan*\n\n\n\n"
+                . "Silahkan ditindaklanjuti ya...\n\n"
                 . "Terima kasih 🙏";
 
             // kirim WA (tanpa nunggu response)
-            $nohp = auth()->user()->mahasiswa->nohp;
+            $nohp = $data->lab->laboran->nohp;
 
             app(WaSender::class)->send($nohp, $message);
 

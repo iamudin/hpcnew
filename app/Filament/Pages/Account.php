@@ -9,6 +9,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Validation\Rule;
 
 class Account extends Page
 {
@@ -51,6 +52,7 @@ class Account extends Page
         $this->form->fill([
             'email' => $user?->email,
             'avatar' => $user?->avatar, 
+            'nohp' => $user?->nohp, 
         ]);
     }
 
@@ -68,10 +70,19 @@ FileUpload::make('avatar')
     ->visibility('public')
     ->disk('public')
     ->imageEditor(),
+     TextInput::make('nohp')
+                        ->label('No Whatsapp (aktif)')
+                        ->numeric()
+                        ->placeholder("62812345678")
+                        ->visible(fn()=>auth()->user()->isLaboran()),
+
 
                    TextInput::make('email')
                         ->label('Email')
                         ->email()
+           ->rules([
+        Rule::unique('users', 'email')->ignore($this->record->id),
+    ])
                         ->required(),
 
                TextInput::make('password')
@@ -96,6 +107,7 @@ FileUpload::make('avatar')
         $this->record->update([
             'email' => $data['email'],
             'avatar' => $data['avatar'],
+            'nohp' => $data['nohp'] ?? null,
         ]);
 if (!empty($data['avatar'])) {
     $this->record->update([
