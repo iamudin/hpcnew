@@ -41,6 +41,14 @@ public static function getEloquentQuery(): Builder
                 $query->where('user_id', auth()->id());
             });
         }
+        if(auth()->user()->isLaboran()){
+            $query->where('laboran_id', auth()->id());
+        }
+           if(auth()->user()->isKalab()){
+             $query->whereHas('lab.kalab', function (Builder $query) {
+                $query->where('user_id', auth()->id());
+            });
+        }
     return $query;
 }
     public static function table(Table $table): Table
