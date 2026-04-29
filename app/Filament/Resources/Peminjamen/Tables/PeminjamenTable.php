@@ -24,14 +24,13 @@ use Illuminate\Support\HtmlString;
 
 class PeminjamenTable
 {
-    public static function configure(Table $table): Table
-    {
+    public static function configure(Table $table): Table {
         return $table
             ->columns([
                 TextColumn::make('lab.nama_labor')
                     ->description(fn($record) => $record->lab->laboran ? 'Nama Laboran : ' . $record->lab->laboran?->name : '')
                     ->searchable()
-                    ->hidden(fn() => in_array(auth()->user()->role, [ 'kepala_laboran'])),// hanya tampil untuk admin,
+                    ->hidden(fn() => in_array(auth()->user()->role, ['kepala_laboran'])),// hanya tampil untuk admin,
                 TextColumn::make('mahasiswa.nama')
                     ->visible(fn() => in_array(auth()->user()->role, ['laboran', 'kepala_laboran'])) // hanya tampil untuk admin
                     ->description(fn($record) => $record->mahasiswa ? 'NIM: ' . $record->mahasiswa?->nim . ' | Prodi: ' . $record->mahasiswa?->prodi : '')
@@ -112,7 +111,7 @@ class PeminjamenTable
                     ->placeholder('Semua Lab'),
                 Filter::make('created_at')
                     ->form([
-                       
+
                         DatePicker::make('from')->label('Dari Tanggal'),
                         DatePicker::make('until')->label('Sampai Tanggal'),
                     ])
@@ -203,29 +202,27 @@ class PeminjamenTable
                         if ($data['status'] == 'confirmed_laboran') {
                             $update['confirmed_laboran_at'] = now();
                         }
-                        if ($data['status'] == 'pending_kepala') {
 
+                        if ($data['status'] == 'pending_kepala') {
                             $message = "📢 *Sistem Peminjaman Laboratorium*\n\n"
                                 . "Halo Kepala Laboran *{$record->lab->nama_labor}*,\n\n"
                                 . "Saat ini ada Permohonan peminjaman laboratorium pada tanggal {$record->tanggal_mulai} mohon ditindaklanjuti.\n\n"
                                 . "Terima kasih 🙏";
-
                             $nohp = $record->lab->kalab->nohp;
-
                             app(WaSender::class)->send($nohp, $message);
                         }
+
                         if ($data['status'] == 'approved') {
                             $update['approved_at'] = now();
+                            $message = "📢 *Sistem Peminjaman Laboratorium*\n\n"
+                                . "Halo {$record->mahasiswa->nama},\n\n"
+                                . "Permohonan peminjaman laboratorium {$record->lab->nama_labor} pada tanggal {$record->tanggal_mulai} anda telah *disetujui*.\n\n"
+                                . "Terima kasih 🙏";
 
-                                $message = "📢 *Sistem Peminjaman Laboratorium*\n\n"
-                                    . "Halo {$record->mahasiswa->nama},\n\n"
-                                    . "Permohonan peminjaman laboratorium {$record->lab->nama_labor} pada tanggal {$record->tanggal_mulai} anda telah *disetujui*.\n\n"
-                                    . "Terima kasih 🙏";
+                            // kirim WA (tanpa nunggu response)
+                            $nohp = $record->mahasiswa->nohp;
 
-                                // kirim WA (tanpa nunggu response)
-                                $nohp = $record->mahasiswa->nohp;
-
-                                app(WaSender::class)->send($nohp, $message);
+                            app(WaSender::class)->send($nohp, $message);
 
                         }
 
@@ -235,10 +232,8 @@ class PeminjamenTable
                                 . "Halo {$record->mahasiswa->nama},\n\n"
                                 . "Permohonan peminjaman laboratorium {$record->lab->nama_labor} pada tanggal *{$record->tanggal_mulai}* saat ini  *ditolak* karena *{$data['catatan']}*.\n\n"
                                 . "Terima kasih 🙏";
-
                             // kirim WA (tanpa nunggu response)
                             $nohp = $record->mahasiswa->nohp;
-
                             app(WaSender::class)->send($nohp, $message);
                         }
 
@@ -255,7 +250,7 @@ class PeminjamenTable
                     ->modalSubmitActionLabel('Simpan')
                     ->modalWidth('lg'),
                 EditAction::make()->visible(fn($record) => $record->status == 'pending'),
-                DeleteAction::make()->visible(fn($record)=> auth()->user()->isMahasiswa() && $record->status=='pending' || auth()->user()->isLaboran()),
+                DeleteAction::make()->visible(fn($record) => auth()->user()->isMahasiswa() && $record->status == 'pending' || auth()->user()->isLaboran()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

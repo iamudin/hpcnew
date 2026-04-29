@@ -312,7 +312,8 @@ Placeholder::make('status_progress')->visible(fn (string $operation) => $operati
                         Textarea::make('catatan_mahasiswa')
                             ->label('Catatan Tambahan')
                             ->placeholder('Misal: Butuh proyektor, atau catatan khusus lainnya')
-                            ->maxLength(300),
+                            ->maxLength(300)
+                            ->required(),
                         Textarea::make('keperluan')
                             ->label('Keperluan')
                             ->placeholder('Jelaskan secara singkat dan jelas keperluan peminjaman laboratorium')

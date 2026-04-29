@@ -12,10 +12,8 @@ class CreatePeminjaman extends CreateRecord
 {
     protected static string $resource = PeminjamanResource::class;
 
-protected function afterCreate():void
-{
-    if(auth()->user()->isMahasiswa())
-{
+    protected function afterCreate(): void {
+        if (auth()->user()->isMahasiswa()) {
             $data = $this->record;
             // format tanggal biar rapi
             $tanggal = \Carbon\Carbon::parse($data->tanggal_mulai)
@@ -34,33 +32,31 @@ protected function afterCreate():void
                 . "Silahkan ditindaklanjuti ya...\n\n"
                 . "Terima kasih 🙏";
 
-            // kirim WA (tanpa nunggu response)
+            // kirim WA 
             $nohp = $data->lab->laboran->nohp;
 
             app(WaSender::class)->send($nohp, $message);
 
-        } 
-}
-    protected  function getFormActions(): array
-{
-    return [
-        Action::make('create')
-            ->label('Ajukan Peminjaman')
-            ->color('success')
-            ->icon('heroicon-o-paper-airplane')
-            ->submit('create')
-            ->keyBindings(['mod+s']),
+        }
+    }
+    protected function getFormActions(): array {
+        return [
+            Action::make('create')
+                ->label('Ajukan Peminjaman')
+                ->color('success')
+                ->icon('heroicon-o-paper-airplane')
+                ->submit('create')
+                ->keyBindings(['mod+s']),
 
-        Action::make('cancel')
-            ->label('Batal')
-            ->url($this->getResource()::getUrl('index'))
-            ->color('gray')
-    ];
-}
+            Action::make('cancel')
+                ->label('Batal')
+                ->url($this->getResource()::getUrl('index'))
+                ->color('gray')
+        ];
+    }
 
-public function mount(): void
-{
-    parent::mount();
+    public function mount(): void {
+        parent::mount();
         if (auth()->user()->isMahasiswa() && !auth()->user()?->mahasiswa?->profileIsComplete()) {
 
             if (!auth()->user()?->mahasiswa->profileIsComplete()) {
@@ -77,11 +73,10 @@ public function mount(): void
                 return;
             }
         }
-}
-   protected function mutateFormDataBeforeCreate(array $data): array
-{
-    $data['mahasiswa_id'] = auth()->user()->isMahasiswa() ? auth()->user()->mahasiswa->id : null;   // paksa isi dari user login
+    }
+    protected function mutateFormDataBeforeCreate(array $data): array {
+        $data['mahasiswa_id'] = auth()->user()->isMahasiswa() ? auth()->user()->mahasiswa->id : null;   // paksa isi dari user login
 
-    return $data;
-}
+        return $data;
+    }
 }
