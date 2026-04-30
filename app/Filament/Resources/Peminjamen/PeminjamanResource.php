@@ -42,7 +42,7 @@ public static function getEloquentQuery(): Builder
             });
         }
         if(auth()->user()->isLaboran()){
-            $query->where('laboran_id', auth()->id());
+            $query->whereHas('lab', fn($q)=>$q->where('laboran_id',auth()->id()));
         }
            if(auth()->user()->isKalab()){
              $query->whereHas('lab.kalab', function (Builder $query) {
