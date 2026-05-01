@@ -44,7 +44,7 @@ class Mahasiswa extends Model
     }
 
     public function profileIsComplete(){
-        return !empty($this->user->avatar) && !empty($this->nim) && !empty($this->nama) && !empty($this->nohp) && !empty($this->semester) && !empty($this->prodi);
+        return !empty($this->user->avatar) && !empty($this->nim) && !empty($this->nama) && !empty($this->nohp) && !empty($this->semester) && !empty($this->prodi) && !empty($this->kelas);
     }
     public function peminjaman(): HasMany
     {

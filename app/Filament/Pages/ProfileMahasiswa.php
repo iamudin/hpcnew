@@ -57,6 +57,7 @@ class ProfileMahasiswa extends Page implements Forms\Contracts\HasForms
             'nim' => $this->record->nim,
             'prodi' => $this->record->prodi,
             'semester' => $this->record->semester,
+            'kelas' => $this->record->kelas,
             'nohp' => $this->record->nohp,
             'email' => $this->record->user?->email,
              'avatar' => $this->record->user?->avatar, 
@@ -89,7 +90,8 @@ Forms\Components\FileUpload::make('avatar')
                     Forms\Components\TextInput::make('semester')
                         ->numeric()
                         ->required(),
-
+      Forms\Components\TextInput::make('kelas')
+                        ->required(),
                     Forms\Components\TextInput::make('nohp')
                         ->tel()
                         ->required(),
@@ -125,6 +127,7 @@ Forms\Components\FileUpload::make('avatar')
             'nim' => $data['nim'],
             'prodi' => $data['prodi'],
             'semester' => $data['semester'],
+            'kelas' => $data['kelas'],
             'nohp' => $data['nohp'],
         ]);
 

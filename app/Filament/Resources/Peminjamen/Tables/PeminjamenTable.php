@@ -33,7 +33,7 @@ class PeminjamenTable
                     ->hidden(fn() => in_array(auth()->user()->role, ['kepala_laboran'])),// hanya tampil untuk admin,
                 TextColumn::make('mahasiswa.nama')
                     ->visible(fn() => in_array(auth()->user()->role, ['laboran', 'kepala_laboran'])) // hanya tampil untuk admin
-                    ->description(fn($record) => $record->mahasiswa ? 'NIM: ' . $record->mahasiswa?->nim . ' | Prodi: ' . $record->mahasiswa?->prodi : '')
+                    ->description(fn($record) => $record->mahasiswa ? 'NIM: ' . $record->mahasiswa?->nim . ' | Prodi: ' . $record->mahasiswa?->prodi.' | Kelas: ' . $record->mahasiswa?->kelas : '')
                     ->default('Tidak ada mahasiswa')
                     ->searchable()
                     ->url(fn($record) => $record->mahasiswa ? route('filament.admin.resources.mahasiswas.view', $record->mahasiswa->id) : null)

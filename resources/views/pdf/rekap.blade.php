@@ -31,6 +31,9 @@
                 @endif
                     <th style="border: 1px solid #000; padding: 6px; background-color: #f2f2f2;">NIM</th>
                 <th style="border: 1px solid #000; padding: 6px; background-color: #f2f2f2;">Nama</th>
+                <th style="border: 1px solid #000; padding: 6px; background-color: #f2f2f2;">Prodi</th>
+                <th style="border: 1px solid #000; padding: 6px; background-color: #f2f2f2;">Semester</th>
+                <th style="border: 1px solid #000; padding: 6px; background-color: #f2f2f2;">Kelas</th>
                 <th style="border: 1px solid #000; padding: 6px; background-color: #f2f2f2;">Tanggal Pinjam</th>
             </tr>
         </thead>
@@ -50,6 +53,15 @@
                     </td>
                     <td style="border: 1px solid #000; padding: 6px;">
                         {{ $item->mahasiswa->nama }}
+                    </td>
+                    <td style="border: 1px solid #000; padding: 6px;">
+                        {{ $item->mahasiswa->prodi }}
+                    </td>
+                    <td style="border: 1px solid #000; padding: 6px;">
+                        {{ $item->mahasiswa->semester }}
+                    </td>
+                    <td style="border: 1px solid #000; padding: 6px;">
+                        {{ $item->mahasiswa->kelas }}
                     </td>
                     <td style="border: 1px solid #000; padding: 6px;">
                         {{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d-m-Y') }}
