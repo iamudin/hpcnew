@@ -26,8 +26,12 @@ class PeminjamanChart extends ChartWidget
         $filter = $this->filter;
 
         // ambil semua lab
-        $labs = Lab::whereLaboranId(auth()->id())->pluck('nama_labor', 'id');
-
+        if (auth()->user()->isLaboran()) {
+            $labs = Lab::whereLaboranId(auth()->id())->pluck('nama_labor', 'id');
+        }
+        if(auth()->user()->isKalab()){
+            $labs = Lab::whereKalabId(auth()->user()->kalab->id)->pluck('nama_labor', 'id');
+        }
         $labels = [];
         $datasets = [];
 
