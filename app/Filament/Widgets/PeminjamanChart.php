@@ -32,6 +32,11 @@ class PeminjamanChart extends ChartWidget
         if(auth()->user()->isKalab()){
             $labs = Lab::whereKalabId(auth()->user()->kalab->id)->pluck('nama_labor', 'id');
         }
+           if(auth()->user()->isMahasiswa() || auth()->user()->isAdmin()){
+            $labs = Lab::whereHas('peminjaman',function($q){
+                $q->whereHas('mahasiswa',fn($q)=>$q->where('user_id',auth()->id()));
+            })->pluck('nama_labor', 'id');
+        }
           if(auth()->user()->isMahasiswa() || auth()->user()->isAdmin()){
             $labs = Lab::pluck('nama_labor', 'id');
         }
