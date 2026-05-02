@@ -127,7 +127,7 @@ class PeminjamenTable
                         $filters = $livewire->tableFilters;
 
                         return !empty($filters['created_at']['from'])
-                            && !empty($filters['created_at']['until']);
+                            && !empty($filters['created_at']['until']) && !auth()->user()->isMahasiswa();
                     })
 
                     ->label('Cetak Rekap Peminjaman')
