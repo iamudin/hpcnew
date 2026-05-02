@@ -35,6 +35,7 @@
                 <th style="border: 1px solid #000; padding: 6px; background-color: #f2f2f2;">Semester</th>
                 <th style="border: 1px solid #000; padding: 6px; background-color: #f2f2f2;">Kelas</th>
                 <th style="border: 1px solid #000; padding: 6px; background-color: #f2f2f2;">Tanggal Pinjam</th>
+                <th style="border: 1px solid #000; padding: 6px; background-color: #f2f2f2;">Keperluan</th>
             </tr>
         </thead>
         <tbody>
@@ -65,6 +66,9 @@
                     </td>
                     <td style="border: 1px solid #000; padding: 6px;">
                         {{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d-m-Y') }}
+                    </td>
+                    <td style="border: 1px solid #000; padding: 6px;">
+                        {{ $item->keperluan }}
                     </td>
                 </tr>
             @endforeach
