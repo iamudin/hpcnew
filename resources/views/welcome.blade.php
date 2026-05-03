@@ -67,7 +67,10 @@
                   class="px-6 py-2.5 text-sm font-semibold border border-slate-400 hover:border-cyan-400 hover:text-cyan-400 rounded-2xl transition-all duration-300">
             Login
           </a>
-          
+            <a href="/manual-book-sipl.1.0.pdf"
+              class="text-red-500 px-6 py-2.5 text-sm font-semibold border border-red-400 hover:border-cyan-400 hover:text-cyan-400 rounded-2xl transition-all duration-300">
+              Manual Book
+            </a>
        
         </div>
       </div>
